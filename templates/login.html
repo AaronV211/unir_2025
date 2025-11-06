@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Inicio de sesión</title>
+    <link rel="stylesheet" href="styless.css">
+</head>
+
+<style>
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #282c34; /* Un fondo oscuro que se asemeja al editor */
+    display: flex;
+    justify-content: center; /* Centrar horizontalmente */
+    align-items: center; /* Centrar verticalmente */
+    height: 100vh;
+    margin: 0;
+}
+
+.formulario {
+    background: #3c4048; /* Fondo un poco más claro para el formulario */
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* Sombra más pronunciada */
+    width: 300px;
+    display: flex; /* Para organizar los inputs */
+    flex-direction: column; /* Apilarlos verticalmente */
+    gap: 15px; /* Espacio entre los elementos */
+}
+
+.formulario_input {
+    width: 100%;
+    padding: 12px;
+    box-sizing: border-box; 
+    border: 1px solid #5a5f67;
+    border-radius: 5px;
+    background-color: #21252b; 
+    color: #ffffff; 
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.formulario_input:focus {
+    border-color: #61afef; /* Color de borde al enfocar */
+}
+
+.formulario_input[type="submit"] {
+    background-color: #61afef; /* Color de botón llamativo */
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    padding: 12px;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.formulario_input[type="submit"]:hover {
+    background-color: #529ecc;
+}
+</style>
+<body>
+  <form class="formulario">
+    <input class="formulario_input" type="text" placeholder="Nombre">
+    <input class="formulario_input" type="password" placeholder="Contraseña">
+    <input class="formulario_input" type="submit">
+  </form>
+</body>
+</html>
