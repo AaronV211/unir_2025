@@ -1,0 +1,169 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #282c34;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+}
+
+.formulario {
+    background: #3c4048;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.formulario h2 {
+    text-align: center;
+    margin-top: 0;
+    color: #61afef;
+}
+
+.formulario_input {
+    width: 100%;
+    padding: 12px;
+    box-sizing: border-box; 
+    border: 1px solid #5a5f67;
+    border-radius: 5px;
+    background-color: #21252b; 
+    color: #ffffff; 
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.formulario_input::placeholder {
+    color: #9da5b0;
+}
+
+.formulario_input:focus {
+    border-color: #61afef;
+}
+
+.formulario_input[type="submit"] {
+    background-color: #61afef;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    padding: 12px;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.formulario_input[type="submit"]:hover {
+    background-color: #529ecc;
+}
+
+.enlace-registro {
+    color: #adb5bd;
+    font-size: 0.9em;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.enlace-registro a {
+    color: #61afef;
+    text-decoration: none;
+}
+
+.enlace-registro a:hover {
+    text-decoration: underline;
+}
+
+.flashes {
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.flashes .error {
+    background-color: #e06c75;
+    color: #ffffff;
+}
+
+.flashes .success {
+    background-color: #98c379;
+    color: #21252b;
+}
+
+.header-index {
+    background-color: #3c4048;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.header-index h1 {
+    margin: 0;
+    color: #61afef;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-info span {
+    font-size: 1.1em;
+}
+
+.logout-button {
+    background-color: #e06c75;
+    color: #ffffff;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+    background-color: #c95b65;
+}
+
+.main-index {
+    padding: 40px;
+    max-width: 900px;
+    margin: 20px auto;
+    background-color: #3c4048;
+    border-radius: 10px;
+}
+
+.user-list-section h2 {
+    color: #61afef;
+    border-bottom: 2px solid #5a5f67;
+    padding-bottom: 10px;
+}
+
+.user-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.user-list li {
+    background-color: #282c34;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border-left: 4px solid #61afef;
+}
+
+.footer-index {
+    text-align: center;
+    padding: 20px;
+    color: #9da5b0;
+    margin-top: 20px;
+    font-size: 0.9em;
+}

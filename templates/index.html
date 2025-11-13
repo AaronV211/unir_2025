@@ -1,24 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Web Page</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Página Principal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-    <body>
-        <header>
-            <h1>UNIR 2025</h1>
-        </header>
-        <main>
-            <section>
-                <h2>About Me</h2>
-                <p>This is a brief introduction about myself.</p>
-                {{ data }}
-            </section>
-        </main>
-        <footer>
-            <p>&copy; 2023 My Web Page</p>
-        </footer>
-    </body>
+<body>
+    <header class="header-index">
+        <h1>UNIR 2025</h1>
+        <div class="user-info">
+            <span>Bienvenido, <strong>{{ username }}</strong>!</span>
+            <a href="{{ url_for('logout') }}" class="logout-button">Cerrar sesión</a>
+        </div>
+    </header>
+
+    <main class="main-index">
+        <section class="user-list-section">
+            <h2>Usuarios Registrados</h2>
+            <ul class="user-list">
+                {% for user in data %}
+                    <li>{{ user.nombre }} (ID: {{ user.id }})</li>
+                {% else %}
+                    <li>No hay usuarios registrados.</li>
+                {% endfor %}
+            </ul>
+        </section>
+    </main>
+
+    <footer class="footer-index">
+        <p>&copy; 2025 Proyecto UNIR</p>
+    </footer>
+</body>
 </html>

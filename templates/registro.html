@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio de sesión</title>
+    <title>Registro</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <form class="formulario" method="POST" action="{{ url_for('login') }}">
-        <h2>Iniciar Sesión</h2>
+    <form class="formulario" method="POST" action="{{ url_for('register') }}">
+        <h2>Crear Cuenta</h2>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -20,10 +20,10 @@
             {% endif %}
         {% endwith %}
 
-        <input class="formulario_input" type="text" name="nombre" placeholder="Nombre" required>
+        <input class="formulario_input" type="text" name="nombre" placeholder="Nombre de usuario" required>
         <input class="formulario_input" type="password" name="password" placeholder="Contraseña" required>
-        <input class="formulario_input" type="submit" value="Ingresar">
-        <p class="enlace-registro">¿No tienes cuenta? <a href="{{ url_for('register') }}">Regístrate aquí</a></p>
+        <input class="formulario_input" type="submit" value="Registrarse">
+        <p class="enlace-registro">¿Ya tienes cuenta? <a href="{{ url_for('login') }}">Inicia sesión</a></p>
     </form>
 </body>
 </html>
