@@ -5,25 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio de sesión</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <form class="formulario" method="POST" action="{{ url_for('login') }}">
-        <h2>Iniciar Sesión</h2>
+    <div class="container">
+        <form class="formulario" method="POST" action="{{ url_for('login') }}">
+            <h2><i class="fas fa-user-lock"></i> Iniciar Sesión</h2>
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="flashes">
-                {% for category, message in messages %}
-                    <span class="{{ category }}">{{ message }}</span>
-                {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flashes">
+                    {% for category, message in messages %}
+                        <span class="{{ category }}">{{ message }}</span>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
 
-        <input class="formulario_input" type="text" name="nombre" placeholder="Nombre" required>
-        <input class="formulario_input" type="password" name="password" placeholder="Contraseña" required>
-        <input class="formulario_input" type="submit" value="Ingresar">
-        <p class="enlace-registro">¿No tienes cuenta? <a href="{{ url_for('register') }}">Regístrate aquí</a></p>
-    </form>
+            <div class="input-group">
+                <input class="formulario_input" type="text" name="nombre" placeholder="Usuario" required>
+            </div>
+            
+            <div class="input-group" style="margin-top: 15px;">
+                <input class="formulario_input" type="password" name="password" placeholder="Contraseña" required>
+            </div>
+
+            <input class="formulario_input btn-submit" type="submit" value="Ingresar">
+            
+            <p class="enlace-registro">¿No tienes cuenta? <a href="{{ url_for('register') }}">Regístrate aquí</a></p>
+        </form>
+    </div>
 </body>
 </html>

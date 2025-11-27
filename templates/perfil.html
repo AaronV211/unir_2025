@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil de {{ perfil_user.nombre }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="logo">Social UNIR</div>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}" class="nav-item"><i class="fas fa-home"></i> Inicio</a>
+            <a href="{{ url_for('buscar') }}" class="nav-item"><i class="fas fa-search"></i> Buscar</a>
+            <a href="{{ url_for('logout') }}" class="nav-item danger"><i class="fas fa-sign-out-alt"></i> Salir</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <!-- CABECERA DE PERFIL -->
+        <div class="profile-header-card">
+            <div class="profile-cover"></div> <!-- Fondo decorativo -->
+            <div class="profile-details">
+                <div class="profile-pic-container">
+                    <div class="avatar-circle big-avatar">
+                        {% if perfil_user.foto_perfil %}
+                            <img src="{{ url_for('static', filename='uploads/' + perfil_user.foto_perfil) }}">
+                        {% else %}
+                            {{ perfil_user.nombre[0] }}
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Botón para cambiar foto solo si es MI perfil -->
+                    {% if user.id == perfil_user.id %}
+                    <form action="{{ url_for('actualizar_foto') }}" method="POST" enctype="multipart/form-data" class="edit-photo-form">
+                        <label for="upload-photo" class="camera-icon"><i class="fas fa-camera"></i></label>
+                        <input type="file" name="foto_perfil" id="upload-photo" onchange="this.form.submit()" hidden>
+                    </form>
+                    {% endif %}
+                </div>
+
+                <h1>{{ perfil_user.nombre }}</h1>
+                <p class="email-text">{{ perfil_user.email }}</p>
+                
+                <div class="profile-actions">
+                    {% if user.id != perfil_user.id %}
+                        <a href="{{ url_for('chat', receptor_id=perfil_user.id) }}" class="btn-msg">
+                            <i class="fab fa-facebook-messenger"></i> Enviar Mensaje
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <h3 style="margin: 20px 0; border-bottom: 1px solid #333; padding-bottom: 10px;">Publicaciones</h3>
+
+        <!-- LISTA DE POSTS (VERTICAL) - SOLUCIÓN AL PROBLEMA -->
+        <div class="feed-area">
+            {% for post in posts %}
+            <div class="post-card">
+                <!-- Encabezado del Post -->
+                <div class="post-header">
+                    <div class="avatar-circle small">
+                        {% if perfil_user.foto_perfil %}
+                            <img src="{{ url_for('static', filename='uploads/' + perfil_user.foto_perfil) }}">
+                        {% else %}
+                            {{ perfil_user.nombre[0] }}
+                        {% endif %}
+                    </div>
+                    <div class="post-info">
+                        <strong>{{ perfil_user.nombre }}</strong>
+                        <span class="date">{{ post.fecha }}</span>
+                    </div>
+                    
+                    {% if user.id == perfil_user.id %}
+                        <a href="{{ url_for('borrar_post', id=post.id) }}" class="btn-delete" onclick="return confirm('¿Borrar?');">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    {% endif %}
+                </div>
+
+                <!-- Contenido Texto -->
+                {% if post.contenido %}
+                <div class="post-content">
+                    <p>{{ post.contenido }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Contenido Multimedia (Muestra la imagen completa) -->
+                {% if post.tipo_archivo == 'imagen' %}
+                    <div class="post-media">
+                        <img src="{{ url_for('static', filename='uploads/' + post.imagen) }}">
+                    </div>
+                {% elif post.tipo_archivo == 'video' %}
+                    <div class="post-media">
+                        <video controls src="{{ url_for('static', filename='uploads/' + post.imagen) }}"></video>
+                    </div>
+                {% endif %}
+
+                <!-- Footer del Post -->
+                <div class="post-footer">
+                    <button class="btn-action"><i class="far fa-thumbs-up"></i> Me gusta</button>
+                    <button class="btn-action"><i class="far fa-comment-alt"></i> Comentar</button>
+                </div>
+            </div>
+            {% else %}
+                <div class="empty-state">
+                    <p>No hay publicaciones para mostrar.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </main>
+</body>
+</html>

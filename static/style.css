@@ -1,169 +1,473 @@
+/* =========================================
+   1. VARIABLES Y CONFIGURACIÓN GENERAL
+   ========================================= */
+:root {
+    --bg-color: #000000;          /* Fondo principal */
+    --card-bg: #1e1e1e;           /* Fondo de tarjetas/cajas */
+    --text-primary: #f5f5f5;      /* Texto principal */
+    --text-secondary: #a8a8a8;    /* Texto secundario */
+    --accent: #0095f6;            /* Azul principal (Botones, enlaces) */
+    --accent-hover: #0085dd;
+    --danger: #e06c75;            /* Rojo para borrar/salir */
+    --border: #333333;            /* Bordes sutiles */
+    --sidebar-width: 245px;       /* Ancho de la barra lateral */
+    --chat-sent: #0084ff;         /* Color burbuja enviada */
+    --chat-received: #303030;     /* Color burbuja recibida */
+}
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #282c34;
-    color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
     margin: 0;
+    /* Quitamos el padding-top antiguo porque ahora usamos sidebar */
     padding: 0;
+    display: flex; /* Flexbox para layout de 2 columnas (Sidebar | Contenido) */
+    min-height: 100vh;
+}
+
+a { text-decoration: none; color: inherit; transition: 0.2s; }
+ul { list-style: none; padding: 0; }
+
+/* =========================================
+   2. LOGIN Y REGISTRO (Pantalla completa)
+   ========================================= */
+/* La clase .container se usa para centrar login/registro */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .formulario {
-    background: #3c4048;
-    padding: 30px 40px;
-    border-radius: 10px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
-    width: 320px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    background: var(--card-bg);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    width: 100%;
+    max-width: 350px;
+    border: 1px solid var(--border);
+    text-align: center;
 }
 
-.formulario h2 {
-    text-align: center;
-    margin-top: 0;
-    color: #61afef;
-}
+.formulario-registro { max-width: 700px; text-align: left; }
+
+.formulario h2 { color: var(--accent); margin-bottom: 20px; font-size: 1.8em; }
+.subtitle { text-align: center; color: var(--text-secondary); margin-bottom: 30px; }
+
+.input-group { margin-bottom: 15px; text-align: left; }
+.input-group label { display: block; margin-bottom: 5px; color: var(--text-secondary); font-size: 0.9em; }
 
 .formulario_input {
     width: 100%;
     padding: 12px;
     box-sizing: border-box; 
-    border: 1px solid #5a5f67;
-    border-radius: 5px;
-    background-color: #21252b; 
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background-color: #2d2d2d; 
     color: #ffffff; 
     outline: none;
-    transition: border-color 0.3s;
+    font-size: 14px;
+    transition: 0.3s;
 }
 
-.formulario_input::placeholder {
-    color: #9da5b0;
-}
+.formulario_input:focus { border-color: var(--accent); background-color: #363636; }
 
-.formulario_input:focus {
-    border-color: #61afef;
-}
-
-.formulario_input[type="submit"] {
-    background-color: #61afef;
-    color: #ffffff;
+.btn-submit {
+    background-color: var(--accent);
+    color: #fff;
     font-weight: bold;
     cursor: pointer;
     border: none;
-    padding: 12px;
-    margin-top: 10px;
-    transition: background-color 0.3s ease;
+    margin-top: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
+.btn-submit:hover { background-color: var(--accent-hover); }
 
-.formulario_input[type="submit"]:hover {
-    background-color: #529ecc;
-}
+.enlace-registro { margin-top: 20px; font-size: 0.9em; color: #888; }
+.enlace-registro a { color: var(--accent); font-weight: bold; }
 
-.enlace-registro {
-    color: #adb5bd;
-    font-size: 0.9em;
-    text-align: center;
-    margin-top: 10px;
-}
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+@media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
 
-.enlace-registro a {
-    color: #61afef;
-    text-decoration: none;
-}
 
-.enlace-registro a:hover {
-    text-decoration: underline;
-}
-
-.flashes {
-    padding: 10px;
-    border-radius: 5px;
-    text-align: center;
-    font-size: 0.9em;
-}
-
-.flashes .error {
-    background-color: #e06c75;
-    color: #ffffff;
-}
-
-.flashes .success {
-    background-color: #98c379;
-    color: #21252b;
-}
-
-.header-index {
-    background-color: #3c4048;
-    padding: 20px 40px;
+/* =========================================
+   3. BARRA LATERAL (SIDEBAR)
+   ========================================= */
+.sidebar {
+    width: var(--sidebar-width);
+    height: 100vh;
+    background-color: var(--bg-color);
+    border-right: 1px solid var(--border);
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 20px 10px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    flex-direction: column;
+    box-sizing: border-box;
+    z-index: 1000;
 }
 
-.header-index h1 {
-    margin: 0;
-    color: #61afef;
+.sidebar .logo {
+    font-size: 1.6em;
+    margin-bottom: 40px;
+    padding-left: 15px;
+    font-weight: bold;
+    font-family: 'Segoe UI', sans-serif;
+    color: white;
 }
 
-.user-info {
+.nav-links { display: flex; flex-direction: column; gap: 10px; }
+
+.nav-item {
+    padding: 12px 15px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     gap: 15px;
+    font-size: 1.1em;
+    color: var(--text-primary);
+    transition: background 0.2s;
 }
 
-.user-info span {
+.nav-item:hover { background-color: rgba(255,255,255,0.1); }
+.nav-item.active { font-weight: bold; }
+.nav-item i { font-size: 1.3em; width: 25px; text-align: center; }
+.nav-item.danger:hover { color: var(--danger); background: rgba(224, 108, 117, 0.1); }
+
+
+/* =========================================
+   4. CONTENIDO PRINCIPAL (FEED Y PÁGINAS)
+   ========================================= */
+.main-content {
+    margin-left: var(--sidebar-width); /* Deja espacio para la sidebar */
+    width: calc(100% - var(--sidebar-width));
+    padding: 30px;
+    box-sizing: border-box;
+    max-width: 900px; /* Ancho máximo para que no se estire demasiado */
+}
+
+/* --- TARJETAS COMUNES (POSTS, CREAR POST) --- */
+.create-post-card, .post-card, .search-container {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 25px;
+    overflow: hidden; /* Para que las imágenes no se salgan de las esquinas */
+}
+
+.create-post-card { padding: 20px; }
+
+.user-input-area { display: flex; gap: 15px; margin-bottom: 15px; }
+.user-input-area textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: white;
+    resize: none;
+    font-size: 1.1em;
+    outline: none;
+    padding-top: 10px;
+}
+
+/* Botones de acción general */
+.btn-action {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.95em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 5px;
+    transition: 0.2s;
+}
+.btn-action:hover { background-color: rgba(255,255,255,0.05); color: var(--accent); }
+
+
+/* =========================================
+   5. DISEÑO DE POSTS
+   ========================================= */
+.post-header {
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.post-info { display: flex; flex-direction: column; }
+.post-info strong { font-size: 1em; }
+.post-info .date { font-size: 0.8em; color: var(--text-secondary); }
+
+.btn-delete { color: var(--text-secondary); margin-left: auto; cursor: pointer; }
+.btn-delete:hover { color: var(--danger); }
+
+.post-content { padding: 0 15px 10px 15px; font-size: 1rem; line-height: 1.5; }
+
+.post-media { width: 100%; background: #000; }
+.post-media img, .post-media video {
+    width: 100%;
+    display: block;
+    max-height: 600px;
+    object-fit: cover; /* Ajuste inteligente de imagen */
+}
+
+.post-footer {
+    padding: 10px 15px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 20px;
+}
+
+/* AVATARES */
+.avatar-circle {
+    width: 40px; height: 40px;
+    background: linear-gradient(45deg, #405de6, #833ab4);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: white;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+.avatar-circle img { width: 100%; height: 100%; object-fit: cover; }
+.avatar-circle.small { width: 35px; height: 35px; font-size: 0.8em; }
+
+
+/* =========================================
+   6. PERFIL (ESTILO PORTADA / FACEBOOK)
+   ========================================= */
+.profile-header-card {
+    background: var(--card-bg);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 25px;
+    text-align: center;
+    padding-bottom: 25px;
+    border: 1px solid var(--border);
+    position: relative;
+}
+
+.profile-cover {
+    height: 180px;
+    background: linear-gradient(to right, #1cb5e0, #000046); /* Degradado por defecto */
+    width: 100%;
+}
+
+.profile-details {
+    padding: 0 20px;
+    position: relative;
+}
+
+.profile-pic-container {
+    margin-top: -85px; /* Subir para solapar con la portada */
+    display: flex;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.big-avatar {
+    width: 160px; height: 160px;
+    border: 5px solid var(--card-bg); /* Borde igual al fondo para separar */
+    font-size: 3.5rem;
+}
+
+/* Botón flotante de cámara para editar foto */
+.camera-icon {
+    position: absolute;
+    bottom: 5px;
+    right: calc(50% - 65px);
+    background: #3a3b3c;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    border: 2px solid var(--card-bg);
+    transition: 0.2s;
+}
+.camera-icon:hover { background: #4e4f50; }
+
+.profile-details h1 { margin: 10px 0 5px 0; font-size: 2rem; }
+.email-text { color: var(--text-secondary); margin: 0 0 20px 0; }
+
+.btn-msg {
+    display: inline-block;
+    background-color: var(--accent);
+    color: white;
+    padding: 10px 25px;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: 0.2s;
+}
+.btn-msg:hover { background-color: var(--accent-hover); }
+
+
+/* =========================================
+   7. CHAT / MENSAJERÍA
+   ========================================= */
+.chat-wrapper {
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    height: 85vh; /* Altura fija para scroll interno */
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+    overflow: hidden;
+}
+
+.chat-header-bar {
+    padding: 15px 20px;
+    background-color: #252525;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-weight: bold;
     font-size: 1.1em;
 }
 
-.logout-button {
-    background-color: #e06c75;
-    color: #ffffff;
-    padding: 8px 15px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background-color 0.3s;
-}
-
-.logout-button:hover {
-    background-color: #c95b65;
-}
-
-.main-index {
-    padding: 40px;
-    max-width: 900px;
-    margin: 20px auto;
-    background-color: #3c4048;
-    border-radius: 10px;
-}
-
-.user-list-section h2 {
-    color: #61afef;
-    border-bottom: 2px solid #5a5f67;
-    padding-bottom: 10px;
-}
-
-.user-list {
-    list-style-type: none;
-    padding-left: 0;
-}
-
-.user-list li {
-    background-color: #282c34;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    border-left: 4px solid #61afef;
-}
-
-.footer-index {
-    text-align: center;
+.messages-area {
+    flex: 1;
+    overflow-y: auto; /* Scroll vertical */
     padding: 20px;
-    color: #9da5b0;
-    margin-top: 20px;
-    font-size: 0.9em;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background-color: #121212;
+}
+
+.message-row { display: flex; width: 100%; margin-bottom: 5px; }
+.message-row.sent { justify-content: flex-end; }     /* Derecha */
+.message-row.received { justify-content: flex-start; } /* Izquierda */
+
+.message-bubble {
+    max-width: 65%;
+    padding: 10px 16px;
+    border-radius: 18px;
+    font-size: 0.95rem;
+    position: relative;
+    word-wrap: break-word;
+    line-height: 1.4;
+}
+
+.sent .message-bubble {
+    background-color: var(--chat-sent);
+    color: white;
+    border-bottom-right-radius: 4px; /* Estilo burbuja */
+}
+
+.received .message-bubble {
+    background-color: var(--chat-received);
+    color: #e4e6eb;
+    border-bottom-left-radius: 4px;
+}
+
+.msg-image img {
+    max-width: 100%;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+.msg-time {
+    display: block;
+    font-size: 0.65em;
+    margin-top: 4px;
+    opacity: 0.7;
+    text-align: right;
+}
+
+.chat-input-bar {
+    padding: 15px;
+    background-color: #252525;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.msg-input {
+    flex: 1;
+    background: #3a3b3c;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 20px;
+    color: white;
+    outline: none;
+    font-size: 0.95em;
+}
+
+.btn-send, .btn-attach {
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.btn-send:hover, .btn-attach:hover { transform: scale(1.1); }
+
+
+/* =========================================
+   8. BÚSQUEDA
+   ========================================= */
+.search-container { padding: 20px; }
+.search-input {
+    width: 100%;
+    padding: 12px;
+    background: #2d2d2d;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: white;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+
+.user-result {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid var(--border);
+    transition: 0.2s;
+}
+.user-result:hover { background-color: #2a2a2a; }
+.user-result:last-child { border-bottom: none; }
+
+
+/* =========================================
+   9. UTILIDADES Y MENSAJES FLASH
+   ========================================= */
+.flashes { width: 100%; margin-bottom: 20px; }
+.flashes span, .alert {
+    display: block; padding: 12px; border-radius: 8px;
+    margin-bottom: 10px; text-align: center; font-weight: bold;
+}
+.error { background-color: rgba(224, 108, 117, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+.success { background-color: rgba(152, 195, 121, 0.2); color: #98c379; border: 1px solid #98c379; }
+
+.empty-state { text-align: center; padding: 50px; color: var(--text-secondary); }
+
+/* Ajuste móvil simple */
+@media (max-width: 768px) {
+    body { flex-direction: column; }
+    .sidebar { 
+        width: 100%; height: auto; position: relative; 
+        border-right: none; border-bottom: 1px solid var(--border); 
+        padding: 10px;
+    }
+    .sidebar .logo { margin-bottom: 10px; text-align: center; padding: 0; }
+    .nav-links { flex-direction: row; justify-content: space-around; }
+    .nav-item span { display: none; } /* Ocultar texto en móvil, solo iconos */
+    .main-content { margin-left: 0; width: 100%; padding: 15px; }
+    .chat-wrapper { height: 75vh; }
 }

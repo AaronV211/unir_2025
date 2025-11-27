@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscar - Social UNIR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="logo">Social UNIR</div>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}" class="nav-item"><i class="fas fa-home"></i> Inicio</a>
+            <a href="{{ url_for('buscar') }}" class="nav-item active" style="font-weight: bold;"><i class="fas fa-search"></i> Buscar</a>
+            <a href="{{ url_for('perfil', id=user.id) }}" class="nav-item"><i class="fas fa-user"></i> Perfil</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="search-container">
+            <h2>Buscar Personas</h2>
+            <form method="POST" action="{{ url_for('buscar') }}">
+                <input type="text" name="busqueda" class="search-input" placeholder="Buscar usuario..." value="{{ busqueda }}">
+            </form>
+
+            <div style="margin-top: 20px;">
+                {% for persona in resultados %}
+                <div class="user-result">
+                    <div class="avatar-circle" style="margin-right: 15px;">
+                        {% if persona.foto_perfil %}
+                            <img src="{{ url_for('static', filename='uploads/' + persona.foto_perfil) }}">
+                        {% else %}
+                            {{ persona.nombre[0] }}
+                        {% endif %}
+                    </div>
+                    <div style="flex: 1;">
+                        <strong>{{ persona.nombre }}</strong>
+                        <div style="color: #888; font-size: 0.9em;">{{ persona.email }}</div>
+                    </div>
+                    <a href="{{ url_for('perfil', id=persona.id) }}" style="color: #0095f6;">Ver Perfil</a>
+                    <a href="{{ url_for('chat', receptor_id=persona.id) }}" style="margin-left: 10px; color: #fff; background: #0095f6; padding: 5px 10px; border-radius: 5px;">Mensaje</a>
+                </div>
+                {% else %}
+                    {% if busqueda %}
+                        <p style="text-align: center; color: #666;">No se encontraron usuarios.</p>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+</body>
+</html>

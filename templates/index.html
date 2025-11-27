@@ -3,33 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Principal</title>
+    <title>Social UNIR</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <header class="header-index">
-        <h1>UNIR 2025</h1>
-        <div class="user-info">
-            <span>Bienvenido, <strong>{{ username }}</strong>!</span>
-            <a href="{{ url_for('logout') }}" class="logout-button">Cerrar sesión</a>
-        </div>
-    </header>
-
-    <main class="main-index">
-        <section class="user-list-section">
-            <h2>Usuarios Registrados</h2>
-            <ul class="user-list">
-                {% for user in data %}
-                    <li>{{ user.nombre }} (ID: {{ user.id }})</li>
+    <!-- BARRA LATERAL (Nueva funcionalidad) -->
+    <nav class="sidebar">
+        <div class="logo">Social UNIR</div>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}" class="nav-item">
+                <i class="fas fa-home"></i> Inicio
+            </a>
+            <a href="{{ url_for('buscar') }}" class="nav-item">
+                <i class="fas fa-search"></i> Buscar
+            </a>
+            <!-- Perfil propio -->
+            <a href="{{ url_for('perfil', id=user.id) }}" class="nav-item">
+                <!-- Mostramos foto si existe, si no, inicial -->
+                {% if user.foto_perfil %}
+                    <div class="avatar-circle" style="width: 25px; height: 25px;">
+                        <img src="{{ url_for('static', filename='uploads/' + user.foto_perfil) }}">
+                    </div>
                 {% else %}
-                    <li>No hay usuarios registrados.</li>
-                {% endfor %}
-            </ul>
-        </section>
-    </main>
+                    <i class="fas fa-user"></i>
+                {% endif %}
+                Perfil
+            </a>
+            <a href="{{ url_for('logout') }}" class="nav-item" style="color: #e06c75;">
+                <i class="fas fa-sign-out-alt"></i> Salir
+            </a>
+        </div>
+    </nav>
 
-    <footer class="footer-index">
-        <p>&copy; 2025 Proyecto UNIR</p>
-    </footer>
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main-content">
+        <!-- Caja para crear Post -->
+        <div class="create-post-card">
+            <form action="{{ url_for('publicar') }}" method="POST" enctype="multipart/form-data">
+                <div class="user-input-area" style="display: flex; gap: 15px; margin-bottom: 15px;">
+                    <div class="avatar-circle">
+                        {% if user.foto_perfil %}
+                            <img src="{{ url_for('static', filename='uploads/' + user.foto_perfil) }}">
+                        {% else %}
+                            {{ user.nombre[0] }}
+                        {% endif %}
+                    </div>
+                    <textarea name="contenido" placeholder="¿Qué estás pensando?" rows="2"></textarea>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <input type="file" name="archivo" id="file" class="inputfile" style="display:none;"/>
+                    <label for="file" style="cursor: pointer; color: #0095f6;"><i class="fas fa-image"></i> Foto/Video</label>
+                    <button type="submit" class="btn-submit" style="width: auto; padding: 5px 20px;">Publicar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Muro -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div style="padding: 10px; margin-bottom: 10px; border-radius: 5px; background: #333; color: white;">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% for post in posts %}
+        <div class="post-card">
+            <div style="padding: 10px; display: flex; align-items: center; gap: 10px;">
+                <div class="avatar-circle" style="width: 32px; height: 32px;">
+                    {% if post.foto_perfil %}
+                        <img src="{{ url_for('static', filename='uploads/' + post.foto_perfil) }}">
+                    {% else %}
+                        {{ post.nombre[0] }}
+                    {% endif %}
+                </div>
+                <strong><a href="{{ url_for('perfil', id=post.user_id) }}">{{ post.nombre }}</a></strong>
+                {% if post.user_id == user.id %}
+                    <a href="{{ url_for('borrar_post', id=post.id) }}" style="margin-left: auto; color: #666;"><i class="fas fa-trash"></i></a>
+                {% endif %}
+            </div>
+
+            {% if post.tipo_archivo == 'imagen' %}
+                <div class="post-media"><img src="{{ url_for('static', filename='uploads/' + post.imagen) }}"></div>
+            {% elif post.tipo_archivo == 'video' %}
+                <div class="post-media"><video controls src="{{ url_for('static', filename='uploads/' + post.imagen) }}"></video></div>
+            {% endif %}
+
+            <div style="padding: 15px;">
+                <p style="margin: 0;">{{ post.contenido }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </main>
 </body>
 </html>

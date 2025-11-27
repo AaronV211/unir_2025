@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat con {{ receptor.nombre }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- BARRA LATERAL -->
+    <nav class="sidebar">
+        <div class="logo">Social UNIR</div>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}" class="nav-item"><i class="fas fa-home"></i> Inicio</a>
+            <a href="{{ url_for('buscar') }}" class="nav-item"><i class="fas fa-search"></i> Buscar</a>
+            <a href="{{ url_for('perfil', id=user.id) }}" class="nav-item">
+                <div class="avatar-circle" style="width: 25px; height: 25px;">
+                     {% if user.foto_perfil %}
+                        <img src="{{ url_for('static', filename='uploads/' + user.foto_perfil) }}">
+                    {% else %}
+                        {{ user.nombre[0] }}
+                    {% endif %}
+                </div>
+                Mi Perfil
+            </a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="chat-wrapper">
+            <!-- CABECERA DEL CHAT -->
+            <div class="chat-header-bar">
+                <div class="avatar-circle" style="width: 40px; height: 40px;">
+                    {% if receptor.foto_perfil %}
+                        <img src="{{ url_for('static', filename='uploads/' + receptor.foto_perfil) }}">
+                    {% else %}
+                        {{ receptor.nombre[0] }}
+                    {% endif %}
+                </div>
+                <h3>{{ receptor.nombre }}</h3>
+            </div>
+
+            <!-- ZONA DE MENSAJES -->
+            <div class="messages-area" id="msgContainer">
+                {% for msg in mensajes %}
+                    <!-- Si el emisor soy yo (user.id), clase 'sent', si no 'received' -->
+                    <div class="message-row {{ 'sent' if msg.emisor_id == user.id else 'received' }}">
+                        <div class="message-bubble">
+                            {% if msg.imagen and msg.imagen != 'None' %}
+                                <div class="msg-image">
+                                    <img src="{{ url_for('static', filename='uploads/' + msg.imagen) }}">
+                                </div>
+                            {% endif %}
+                            
+                            {% if msg.contenido %}
+                                <p>{{ msg.contenido }}</p>
+                            {% endif %}
+                            
+                            <span class="msg-time">{{ msg.fecha }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- INPUT DE ENVÍO -->
+            <form class="chat-input-bar" method="POST" enctype="multipart/form-data">
+                <label for="file-upload" class="btn-attach">
+                    <i class="fas fa-paperclip"></i>
+                </label>
+                <input type="file" name="archivo" id="file-upload" style="display: none;">
+                
+                <input type="text" name="contenido" class="msg-input" placeholder="Escribe un mensaje..." autocomplete="off">
+                
+                <button type="submit" class="btn-send">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        // Bajar scroll automáticamente al cargar
+        var objDiv = document.getElementById("msgContainer");
+        objDiv.scrollTop = objDiv.scrollHeight;
+    </script>
+</body>
+</html>

@@ -5,25 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <form class="formulario" method="POST" action="{{ url_for('register') }}">
-        <h2>Crear Cuenta</h2>
+    <div class="container">
+        <form class="formulario formulario-registro" method="POST" action="{{ url_for('register') }}">
+            <h2>Crear Cuenta Nueva</h2>
+            <p class="subtitle">Ingresa tus datos personales</p>
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="flashes">
-                {% for category, message in messages %}
-                    <span class="{{ category }}">{{ message }}</span>
-                {% endfor %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flashes">
+                    {% for category, message in messages %}
+                        <span class="{{ category }}">{{ message }}</span>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Usuario</label>
+                    <input class="formulario_input" type="text" name="nombre" placeholder="Ej: JuanPerez" required>
                 </div>
-            {% endif %}
-        {% endwith %}
+                
+                <div class="input-group">
+                    <label>Correo Electrónico</label>
+                    <input class="formulario_input" type="email" name="email" placeholder="juan@ejemplo.com" required>
+                </div>
 
-        <input class="formulario_input" type="text" name="nombre" placeholder="Nombre de usuario" required>
-        <input class="formulario_input" type="password" name="password" placeholder="Contraseña" required>
-        <input class="formulario_input" type="submit" value="Registrarse">
-        <p class="enlace-registro">¿Ya tienes cuenta? <a href="{{ url_for('login') }}">Inicia sesión</a></p>
-    </form>
+                <div class="input-group">
+                    <label>Cédula / DNI</label>
+                    <input class="formulario_input" type="text" name="cedula" placeholder="Número de identidad" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Fecha de Nacimiento</label>
+                    <input class="formulario_input" type="date" name="fecha_nacimiento" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Género</label>
+                    <select class="formulario_input" name="genero">
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Contraseña</label>
+                    <input class="formulario_input" type="password" name="password" placeholder="******" required>
+                </div>
+            </div>
+
+            <input class="formulario_input btn-submit" type="submit" value="Registrarse">
+            
+            <p class="enlace-registro">¿Ya tienes cuenta? <a href="{{ url_for('login') }}">Inicia sesión</a></p>
+        </form>
+    </div>
 </body>
 </html>
