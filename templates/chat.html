@@ -43,7 +43,6 @@
             <!-- ZONA DE MENSAJES -->
             <div class="messages-area" id="msgContainer">
                 {% for msg in mensajes %}
-                    <!-- Si el emisor soy yo (user.id), clase 'sent', si no 'received' -->
                     <div class="message-row {{ 'sent' if msg.emisor_id == user.id else 'received' }}">
                         <div class="message-bubble">
                             {% if msg.imagen and msg.imagen != 'None' %}

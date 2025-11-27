@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- BARRA LATERAL (Nueva funcionalidad) -->
+    <!-- BARRA LATERAL -->
     <nav class="sidebar">
         <div class="logo">Social UNIR</div>
         <div class="nav-links">
@@ -20,7 +20,6 @@
             </a>
             <!-- Perfil propio -->
             <a href="{{ url_for('perfil', id=user.id) }}" class="nav-item">
-                <!-- Mostramos foto si existe, si no, inicial -->
                 {% if user.foto_perfil %}
                     <div class="avatar-circle" style="width: 25px; height: 25px;">
                         <img src="{{ url_for('static', filename='uploads/' + user.foto_perfil) }}">

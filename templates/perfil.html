@@ -19,7 +19,7 @@
     <main class="main-content">
         <!-- CABECERA DE PERFIL -->
         <div class="profile-header-card">
-            <div class="profile-cover"></div> <!-- Fondo decorativo -->
+            <div class="profile-cover"></div> 
             <div class="profile-details">
                 <div class="profile-pic-container">
                     <div class="avatar-circle big-avatar">
@@ -30,7 +30,6 @@
                         {% endif %}
                     </div>
                     
-                    <!-- Botón para cambiar foto solo si es MI perfil -->
                     {% if user.id == perfil_user.id %}
                     <form action="{{ url_for('actualizar_foto') }}" method="POST" enctype="multipart/form-data" class="edit-photo-form">
                         <label for="upload-photo" class="camera-icon"><i class="fas fa-camera"></i></label>
@@ -54,7 +53,7 @@
 
         <h3 style="margin: 20px 0; border-bottom: 1px solid #333; padding-bottom: 10px;">Publicaciones</h3>
 
-        <!-- LISTA DE POSTS (VERTICAL) - SOLUCIÓN AL PROBLEMA -->
+        <!-- LISTA DE POSTS -->
         <div class="feed-area">
             {% for post in posts %}
             <div class="post-card">
@@ -86,7 +85,7 @@
                 </div>
                 {% endif %}
 
-                <!-- Contenido Multimedia (Muestra la imagen completa) -->
+                <!-- Contenido Multimedia -->
                 {% if post.tipo_archivo == 'imagen' %}
                     <div class="post-media">
                         <img src="{{ url_for('static', filename='uploads/' + post.imagen) }}">

@@ -7,17 +7,14 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-# --- CONFIGURACIÓN ---
 app.secret_key = 'unirproyecto_seguro'
 
-# Datos de conexión (Servidor 45.195.229.16)
 app.config['MYSQL_HOST'] = '45.195.229.16'
 app.config['MYSQL_USER'] = 'adminremote'
 app.config['MYSQL_PASSWORD'] = 'unir'
 app.config['MYSQL_DB'] = 'unir'
 app.config['MYSQL_CONNECT_TIMEOUT'] = 60 
 
-# Carpeta de subidas
 UPLOAD_FOLDER = os.path.join('static', 'uploads')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'mp4'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -33,14 +30,11 @@ def allowed_file(filename):
 def get_db_cursor():
     return mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
-# --- RUTAS PRINCIPALES ---
-
 @app.route('/')
 def home():
     if 'login' in session:
         try:
             cursor = get_db_cursor()
-            # Obtenemos posts con la info del usuario
             cursor.execute('''
                 SELECT posts.*, usuarios.nombre, usuarios.foto_perfil 
                 FROM posts 
@@ -49,7 +43,6 @@ def home():
             ''')
             posts = cursor.fetchall()
             
-            # Usuario actual para la sidebar
             cursor.execute('SELECT * FROM usuarios WHERE id = %s', (session['userid'],))
             current_user_data = cursor.fetchone()
             
@@ -59,7 +52,6 @@ def home():
             print(f"Error en home: {e}")
             flash('Error de conexión con la base de datos. Se muestra versión sin conexión.', 'error')
             
-            # Fallback: Creamos un usuario de respaldo para evitar error en sidebar
             user_fallback = {
                 'id': session.get('userid'),
                 'nombre': session.get('username'),
@@ -81,21 +73,16 @@ def buscar():
     try:
         cursor = get_db_cursor()
         
-        # Primero obtenemos los datos del usuario actual para la barra lateral
-        # Esto evita que la página falle si no se busca nada
         cursor.execute('SELECT * FROM usuarios WHERE id = %s', (session['userid'],))
         current_user_data = cursor.fetchone()
 
         if request.method == 'POST':
-            # .strip() elimina espacios al inicio y final (ej: "luis " -> "luis")
+            
             busqueda = request.form.get('busqueda', '').strip()
             
             if busqueda:
-                # El comodín % permite encontrar coincidencias parciales
-                # "luis" encontrará "luisvalera", "joseluis", etc.
                 query_string = "%" + busqueda + "%"
                 
-                # Buscamos en la base de datos excluyendo al propio usuario
                 cursor.execute('''
                     SELECT * FROM usuarios 
                     WHERE nombre LIKE %s 
@@ -108,12 +95,10 @@ def buscar():
     except Exception as e:
         flash('Error al buscar usuarios.', 'error')
         print(f"Error búsqueda: {e}")
-        # Fallback de datos de usuario en caso de error
         current_user_data = {'id': session.get('userid'), 'nombre': session.get('username'), 'foto_perfil': None}
 
     return render_template('buscar.html', resultados=resultados, busqueda=busqueda, user=current_user_data)
 
-# --- LÓGICA DEL CHAT ---
 @app.route('/chat/<int:receptor_id>', methods=['GET', 'POST'])
 def chat(receptor_id):
     if 'login' not in session: return redirect(url_for('login'))
@@ -123,7 +108,6 @@ def chat(receptor_id):
     try:
         cursor = get_db_cursor()
 
-        # 1. ENVIAR MENSAJE
         if request.method == 'POST':
             contenido = request.form.get('contenido')
             file = request.files.get('archivo')
@@ -145,7 +129,6 @@ def chat(receptor_id):
             
             return redirect(url_for('chat', receptor_id=receptor_id))
 
-        # 2. OBTENER MENSAJES
         cursor.execute('''
             SELECT * FROM mensajes 
             WHERE (emisor_id = %s AND receptor_id = %s) 
@@ -262,7 +245,6 @@ def borrar_post(id):
     except: pass
     return redirect(url_for('home'))
 
-# --- LOGIN Y REGISTRO ---
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':

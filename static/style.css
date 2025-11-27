@@ -1,18 +1,15 @@
-/* =========================================
-   1. VARIABLES Y CONFIGURACIÓN GENERAL
-   ========================================= */
 :root {
-    --bg-color: #000000;          /* Fondo principal */
-    --card-bg: #1e1e1e;           /* Fondo de tarjetas/cajas */
-    --text-primary: #f5f5f5;      /* Texto principal */
-    --text-secondary: #a8a8a8;    /* Texto secundario */
-    --accent: #0095f6;            /* Azul principal (Botones, enlaces) */
+    --bg-color: #000000;
+    --card-bg: #1e1e1e;
+    --text-primary: #f5f5f5;
+    --text-secondary: #a8a8a8;
+    --accent: #0095f6;
     --accent-hover: #0085dd;
-    --danger: #e06c75;            /* Rojo para borrar/salir */
-    --border: #333333;            /* Bordes sutiles */
-    --sidebar-width: 245px;       /* Ancho de la barra lateral */
-    --chat-sent: #0084ff;         /* Color burbuja enviada */
-    --chat-received: #303030;     /* Color burbuja recibida */
+    --danger: #e06c75;
+    --border: #333333;
+    --sidebar-width: 245px;
+    --chat-sent: #0084ff;
+    --chat-received: #303030;
 }
 
 body {
@@ -20,19 +17,14 @@ body {
     background-color: var(--bg-color);
     color: var(--text-primary);
     margin: 0;
-    /* Quitamos el padding-top antiguo porque ahora usamos sidebar */
     padding: 0;
-    display: flex; /* Flexbox para layout de 2 columnas (Sidebar | Contenido) */
+    display: flex;
     min-height: 100vh;
 }
 
 a { text-decoration: none; color: inherit; transition: 0.2s; }
 ul { list-style: none; padding: 0; }
 
-/* =========================================
-   2. LOGIN Y REGISTRO (Pantalla completa)
-   ========================================= */
-/* La clase .container se usa para centrar login/registro */
 .container {
     display: flex;
     justify-content: center;
@@ -65,11 +57,11 @@ ul { list-style: none; padding: 0; }
 .formulario_input {
     width: 100%;
     padding: 12px;
-    box-sizing: border-box; 
+    box-sizing: border-box;
     border: 1px solid var(--border);
     border-radius: 8px;
-    background-color: #2d2d2d; 
-    color: #ffffff; 
+    background-color: #2d2d2d;
+    color: #ffffff;
     outline: none;
     font-size: 14px;
     transition: 0.3s;
@@ -95,10 +87,6 @@ ul { list-style: none; padding: 0; }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
 @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
 
-
-/* =========================================
-   3. BARRA LATERAL (SIDEBAR)
-   ========================================= */
 .sidebar {
     width: var(--sidebar-width);
     height: 100vh;
@@ -141,25 +129,20 @@ ul { list-style: none; padding: 0; }
 .nav-item i { font-size: 1.3em; width: 25px; text-align: center; }
 .nav-item.danger:hover { color: var(--danger); background: rgba(224, 108, 117, 0.1); }
 
-
-/* =========================================
-   4. CONTENIDO PRINCIPAL (FEED Y PÁGINAS)
-   ========================================= */
 .main-content {
-    margin-left: var(--sidebar-width); /* Deja espacio para la sidebar */
+    margin-left: var(--sidebar-width);
     width: calc(100% - var(--sidebar-width));
     padding: 30px;
     box-sizing: border-box;
-    max-width: 900px; /* Ancho máximo para que no se estire demasiado */
+    max-width: 900px;
 }
 
-/* --- TARJETAS COMUNES (POSTS, CREAR POST) --- */
 .create-post-card, .post-card, .search-container {
     background-color: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: 10px;
     margin-bottom: 25px;
-    overflow: hidden; /* Para que las imágenes no se salgan de las esquinas */
+    overflow: hidden;
 }
 
 .create-post-card { padding: 20px; }
@@ -176,7 +159,6 @@ ul { list-style: none; padding: 0; }
     padding-top: 10px;
 }
 
-/* Botones de acción general */
 .btn-action {
     background: none;
     border: none;
@@ -192,10 +174,6 @@ ul { list-style: none; padding: 0; }
 }
 .btn-action:hover { background-color: rgba(255,255,255,0.05); color: var(--accent); }
 
-
-/* =========================================
-   5. DISEÑO DE POSTS
-   ========================================= */
 .post-header {
     padding: 15px;
     display: flex;
@@ -217,7 +195,7 @@ ul { list-style: none; padding: 0; }
     width: 100%;
     display: block;
     max-height: 600px;
-    object-fit: cover; /* Ajuste inteligente de imagen */
+    object-fit: cover;
 }
 
 .post-footer {
@@ -227,7 +205,6 @@ ul { list-style: none; padding: 0; }
     gap: 20px;
 }
 
-/* AVATARES */
 .avatar-circle {
     width: 40px; height: 40px;
     background: linear-gradient(45deg, #405de6, #833ab4);
@@ -242,10 +219,6 @@ ul { list-style: none; padding: 0; }
 .avatar-circle img { width: 100%; height: 100%; object-fit: cover; }
 .avatar-circle.small { width: 35px; height: 35px; font-size: 0.8em; }
 
-
-/* =========================================
-   6. PERFIL (ESTILO PORTADA / FACEBOOK)
-   ========================================= */
 .profile-header-card {
     background: var(--card-bg);
     border-radius: 10px;
@@ -259,7 +232,7 @@ ul { list-style: none; padding: 0; }
 
 .profile-cover {
     height: 180px;
-    background: linear-gradient(to right, #1cb5e0, #000046); /* Degradado por defecto */
+    background: linear-gradient(to right, #1cb5e0, #000046);
     width: 100%;
 }
 
@@ -269,7 +242,7 @@ ul { list-style: none; padding: 0; }
 }
 
 .profile-pic-container {
-    margin-top: -85px; /* Subir para solapar con la portada */
+    margin-top: -85px;
     display: flex;
     justify-content: center;
     position: relative;
@@ -278,11 +251,10 @@ ul { list-style: none; padding: 0; }
 
 .big-avatar {
     width: 160px; height: 160px;
-    border: 5px solid var(--card-bg); /* Borde igual al fondo para separar */
+    border: 5px solid var(--card-bg);
     font-size: 3.5rem;
 }
 
-/* Botón flotante de cámara para editar foto */
 .camera-icon {
     position: absolute;
     bottom: 5px;
@@ -311,14 +283,10 @@ ul { list-style: none; padding: 0; }
 }
 .btn-msg:hover { background-color: var(--accent-hover); }
 
-
-/* =========================================
-   7. CHAT / MENSAJERÍA
-   ========================================= */
 .chat-wrapper {
     background-color: var(--card-bg);
     border-radius: 10px;
-    height: 85vh; /* Altura fija para scroll interno */
+    height: 85vh;
     display: flex;
     flex-direction: column;
     border: 1px solid var(--border);
@@ -338,7 +306,7 @@ ul { list-style: none; padding: 0; }
 
 .messages-area {
     flex: 1;
-    overflow-y: auto; /* Scroll vertical */
+    overflow-y: auto;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -347,8 +315,8 @@ ul { list-style: none; padding: 0; }
 }
 
 .message-row { display: flex; width: 100%; margin-bottom: 5px; }
-.message-row.sent { justify-content: flex-end; }     /* Derecha */
-.message-row.received { justify-content: flex-start; } /* Izquierda */
+.message-row.sent { justify-content: flex-end; }
+.message-row.received { justify-content: flex-start; }
 
 .message-bubble {
     max-width: 65%;
@@ -363,7 +331,7 @@ ul { list-style: none; padding: 0; }
 .sent .message-bubble {
     background-color: var(--chat-sent);
     color: white;
-    border-bottom-right-radius: 4px; /* Estilo burbuja */
+    border-bottom-right-radius: 4px;
 }
 
 .received .message-bubble {
@@ -417,10 +385,6 @@ ul { list-style: none; padding: 0; }
 }
 .btn-send:hover, .btn-attach:hover { transform: scale(1.1); }
 
-
-/* =========================================
-   8. BÚSQUEDA
-   ========================================= */
 .search-container { padding: 20px; }
 .search-input {
     width: 100%;
@@ -443,10 +407,6 @@ ul { list-style: none; padding: 0; }
 .user-result:hover { background-color: #2a2a2a; }
 .user-result:last-child { border-bottom: none; }
 
-
-/* =========================================
-   9. UTILIDADES Y MENSAJES FLASH
-   ========================================= */
 .flashes { width: 100%; margin-bottom: 20px; }
 .flashes span, .alert {
     display: block; padding: 12px; border-radius: 8px;
@@ -457,17 +417,16 @@ ul { list-style: none; padding: 0; }
 
 .empty-state { text-align: center; padding: 50px; color: var(--text-secondary); }
 
-/* Ajuste móvil simple */
 @media (max-width: 768px) {
     body { flex-direction: column; }
-    .sidebar { 
-        width: 100%; height: auto; position: relative; 
-        border-right: none; border-bottom: 1px solid var(--border); 
+    .sidebar {
+        width: 100%; height: auto; position: relative;
+        border-right: none; border-bottom: 1px solid var(--border);
         padding: 10px;
     }
     .sidebar .logo { margin-bottom: 10px; text-align: center; padding: 0; }
     .nav-links { flex-direction: row; justify-content: space-around; }
-    .nav-item span { display: none; } /* Ocultar texto en móvil, solo iconos */
+    .nav-item span { display: none; }
     .main-content { margin-left: 0; width: 100%; padding: 15px; }
     .chat-wrapper { height: 75vh; }
 }
