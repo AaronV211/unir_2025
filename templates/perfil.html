@@ -12,6 +12,8 @@
         <div class="nav-links">
             <a href="{{ url_for('home') }}" class="nav-item"><i class="fas fa-home"></i> Inicio</a>
             <a href="{{ url_for('buscar') }}" class="nav-item"><i class="fas fa-search"></i> Buscar</a>
+            <a href="{{ url_for('perfil', id=user.id) }}" class="nav-item"><i class="fas fa-user"></i> Mi perfil</a>
+            <a href="{{ url_for('seguridad') }}" class="nav-item"><i class="fas fa-shield-alt"></i> Seguridad</a>
             <a href="{{ url_for('logout') }}" class="nav-item danger"><i class="fas fa-sign-out-alt"></i> Salir</a>
         </div>
     </nav>
@@ -40,10 +42,33 @@
 
                 <h1>{{ perfil_user.nombre }}</h1>
                 <p class="email-text">{{ perfil_user.email }}</p>
-                
+
+                <div class="follow-stats">
+                    <div class="follow-stat">
+                        <span class="follow-stat-number">{{ seguidores }}</span>
+                        <span class="follow-stat-label">Seguidores</span>
+                    </div>
+                    <div class="follow-stat">
+                        <span class="follow-stat-number">{{ seguidos }}</span>
+                        <span class="follow-stat-label">Seguidos</span>
+                    </div>
+                </div>
+
                 <div class="profile-actions">
                     {% if user.id != perfil_user.id %}
-                        <a href="{{ url_for('chat', receptor_id=perfil_user.id) }}" class="btn-msg">
+                        <form method="POST" action="{{ url_for('toggle_follow', id=perfil_user.id) }}" class="follow-form">
+                            {% if is_following %}
+                                <button type="submit" class="btn-follow following">
+                                    <i class="fas fa-user-check"></i> Siguiendo
+                                </button>
+                            {% else %}
+                                <button type="submit" class="btn-follow">
+                                    <i class="fas fa-user-plus"></i> Seguir
+                                </button>
+                            {% endif %}
+                        </form>
+
+                        <a href="{{ url_for('chat', receptor_id=perfil_user.id) }}" class="btn-msg secondary">
                             <i class="fab fa-facebook-messenger"></i> Enviar Mensaje
                         </a>
                     {% endif %}

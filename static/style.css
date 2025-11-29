@@ -272,6 +272,65 @@ ul { list-style: none; padding: 0; }
 .profile-details h1 { margin: 10px 0 5px 0; font-size: 2rem; }
 .email-text { color: var(--text-secondary); margin: 0 0 20px 0; }
 
+.follow-stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 15px;
+}
+
+.follow-stat {
+    text-align: center;
+}
+
+.follow-stat-number {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.follow-stat-label {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.profile-actions {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-follow {
+    display: inline-block;
+    padding: 8px 20px;
+    border-radius: 20px;
+    border: 1px solid var(--accent);
+    background-color: transparent;
+    color: var(--accent);
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-follow:hover {
+    background-color: var(--accent);
+    color: #fff;
+}
+
+.btn-follow.following {
+    background-color: var(--accent);
+    color: #fff;
+}
+
+.btn-msg.secondary {
+    background-color: #3a3b3c;
+}
+
+.btn-msg.secondary:hover {
+    background-color: #4a4b4d;
+}
+
 .btn-msg {
     display: inline-block;
     background-color: var(--accent);
@@ -430,3 +489,30 @@ ul { list-style: none; padding: 0; }
     .main-content { margin-left: 0; width: 100%; padding: 15px; }
     .chat-wrapper { height: 75vh; }
 }
+
+
+/* Seguridad / cambio de contraseña */
+.security-card {
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    padding: 30px;
+    max-width: 480px;
+    margin: 40px auto;
+    border: 1px solid var(--border);
+}
+
+.security-card h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.security-subtitle {
+    color: var(--text-secondary);
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+}
+
+.security-form .input-group {
+    margin-bottom: 15px;
+}
+

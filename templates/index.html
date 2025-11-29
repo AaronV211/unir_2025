@@ -29,6 +29,9 @@
                 {% endif %}
                 Perfil
             </a>
+            <a href="{{ url_for('seguridad') }}" class="nav-item">
+                <i class="fas fa-shield-alt"></i> Seguridad
+            </a>
             <a href="{{ url_for('logout') }}" class="nav-item" style="color: #e06c75;">
                 <i class="fas fa-sign-out-alt"></i> Salir
             </a>
@@ -38,7 +41,7 @@
     <!-- CONTENIDO PRINCIPAL -->
     <main class="main-content">
         <!-- Caja para crear Post -->
-        <div class="create-post-card">
+        <div class="create-post-card">ard">
             <form action="{{ url_for('publicar') }}" method="POST" enctype="multipart/form-data">
                 <div class="user-input-area" style="display: flex; gap: 15px; margin-bottom: 15px;">
                     <div class="avatar-circle">

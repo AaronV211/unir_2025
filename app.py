@@ -30,6 +30,23 @@ def allowed_file(filename):
 def get_db_cursor():
     return mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
+def ensure_follows_table(cursor):
+    """Crea la tabla de seguimientos si aún no existe."""
+    try:
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS follows (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                follower_id INT NOT NULL,
+                followed_id INT NOT NULL,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE KEY unique_follow (follower_id, followed_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        """)
+        cursor.connection.commit()
+    except Exception as e:
+        # Si falla no detenemos la app, solo lo registramos en consola
+        print("No se pudo crear/verificar la tabla follows:", e)
+
 @app.route('/')
 def home():
     if 'login' in session:
@@ -154,13 +171,35 @@ def chat(receptor_id):
 
 @app.route('/perfil/<int:id>')
 def perfil(id):
-    if 'login' not in session: return redirect(url_for('login'))
-    
+    if 'login' not in session:
+        return redirect(url_for('login'))
+
     try:
         cursor = get_db_cursor()
+        # Aseguramos que exista la tabla de seguimientos
+        ensure_follows_table(cursor)
+
+        # Datos del usuario del perfil
         cursor.execute('SELECT * FROM usuarios WHERE id = %s', (id,))
         user_data = cursor.fetchone()
-        
+
+        # Contadores de seguidores y seguidos
+        cursor.execute('SELECT COUNT(*) AS total FROM follows WHERE followed_id = %s', (id,))
+        seguidores = cursor.fetchone()['total']
+
+        cursor.execute('SELECT COUNT(*) AS total FROM follows WHERE follower_id = %s', (id,))
+        seguidos = cursor.fetchone()['total']
+
+        # ¿El usuario actual ya sigue a este perfil?
+        is_following = False
+        if session['userid'] != id:
+            cursor.execute(
+                'SELECT 1 FROM follows WHERE follower_id = %s AND followed_id = %s',
+                (session['userid'], id)
+            )
+            is_following = cursor.fetchone() is not None
+
+        # Publicaciones del usuario
         cursor.execute('''
             SELECT posts.*, usuarios.nombre, usuarios.foto_perfil 
             FROM posts 
@@ -170,17 +209,26 @@ def perfil(id):
         ''', (id,))
         user_posts = cursor.fetchall()
 
+        # Datos del usuario autenticado (para la barra lateral)
         cursor.execute('SELECT * FROM usuarios WHERE id = %s', (session['userid'],))
         current_user_data = cursor.fetchone()
         cursor.close()
-        
+
         if user_data:
-            return render_template('perfil.html', perfil_user=user_data, posts=user_posts, user=current_user_data)
-        
-    except Exception:
-        pass 
-        
+            return render_template(
+                'perfil.html',
+                perfil_user=user_data,
+                posts=user_posts,
+                user=current_user_data,
+                seguidores=seguidores,
+                seguidos=seguidos,
+                is_following=is_following
+            )
+    except Exception as e:
+        print("Error en vista de perfil:", e)
+
     return redirect(url_for('home'))
+
 
 @app.route('/actualizar_foto', methods=['POST'])
 def actualizar_foto():
@@ -244,6 +292,94 @@ def borrar_post(id):
         cursor.close()
     except: pass
     return redirect(url_for('home'))
+
+
+
+@app.route('/seguir/<int:id>', methods=['POST'])
+def toggle_follow(id):
+    """Permite seguir o dejar de seguir a otro usuario."""
+    if 'login' not in session:
+        return redirect(url_for('login'))
+
+    follower_id = session['userid']
+
+    # Un usuario no puede seguirse a sí mismo
+    if follower_id == id:
+        flash('No puedes seguirte a ti mismo.', 'error')
+        return redirect(url_for('perfil', id=id))
+
+    try:
+        cursor = get_db_cursor()
+        ensure_follows_table(cursor)
+
+        # Verificamos si ya lo sigue
+        cursor.execute(
+            'SELECT 1 FROM follows WHERE follower_id = %s AND followed_id = %s',
+            (follower_id, id)
+        )
+        ya_sigue = cursor.fetchone() is not None
+
+        if ya_sigue:
+            cursor.execute(
+                'DELETE FROM follows WHERE follower_id = %s AND followed_id = %s',
+                (follower_id, id)
+            )
+            mensaje = 'Has dejado de seguir a este usuario.'
+        else:
+            cursor.execute(
+                'INSERT INTO follows (follower_id, followed_id) VALUES (%s, %s)',
+                (follower_id, id)
+            )
+            mensaje = 'Ahora sigues a este usuario.'
+
+        cursor.connection.commit()
+        cursor.close()
+        flash(mensaje, 'success')
+    except Exception as e:
+        print('Error al actualizar seguimiento:', e)
+        flash('No se ha podido actualizar el seguimiento.', 'error')
+
+    return redirect(url_for('perfil', id=id))
+
+
+@app.route('/seguridad', methods=['GET', 'POST'])
+def seguridad():
+    """Pantalla de cambio de contraseña del usuario."""
+    if 'login' not in session:
+        return redirect(url_for('login'))
+
+    current_user_data = None
+
+    try:
+        cursor = get_db_cursor()
+        cursor.execute('SELECT * FROM usuarios WHERE id = %s', (session['userid'],))
+        current_user_data = cursor.fetchone()
+
+        if request.method == 'POST':
+            actual = request.form.get('password_actual')
+            nueva = request.form.get('password_nueva')
+            confirmar = request.form.get('password_confirmar')
+
+            if not actual or not nueva or not confirmar:
+                flash('Todos los campos son obligatorios.', 'error')
+            elif nueva != confirmar:
+                flash('La nueva contraseña y su verificación no coinciden.', 'error')
+            elif current_user_data is None or current_user_data.get('password') != actual:
+                flash('La contraseña actual es incorrecta.', 'error')
+            else:
+                cursor.execute(
+                    'UPDATE usuarios SET password = %s WHERE id = %s',
+                    (nueva, session['userid'])
+                )
+                cursor.connection.commit()
+                flash('Contraseña actualizada correctamente.', 'success')
+
+        cursor.close()
+    except Exception as e:
+        print('Error en la vista de seguridad:', e)
+        flash('No se pudo actualizar la contraseña. Inténtalo más tarde.', 'error')
+
+    return render_template('seguridad.html', user=current_user_data)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
