@@ -1,0 +1,8 @@
+Nombre: José
+Apellido: Jiménez
+Cédula: V28321177
+Comandos Realizados:
+ - git clone https://github.com/AaronV211/unir_2025
+ - git add jose_jimenez.txt
+ - git commit -m "Agregado archivo de identificación de José Jiménez"
+ - git push
